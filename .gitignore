@@ -33,3 +33,7 @@
 .vs/
 x64/
 Debug/
+
+#Engine files
+*Intermediate/
+*Build/
