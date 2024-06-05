@@ -30,7 +30,7 @@ bool Initialise() {
 	//creating sdl window
 	if (!m_window->CreateWindow({ "Game Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720}))
 		return false;
-
+	
 
 	return true;
 }
