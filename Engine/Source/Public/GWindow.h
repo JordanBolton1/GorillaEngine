@@ -5,6 +5,8 @@
 #include <string>
 
 
+class GGraphicsEngine;
+
 struct GSWindowParams {
 	//default constructor
 	GSWindowParams() {
@@ -31,7 +33,6 @@ struct GSWindowParams {
 	bool vsync;
 	//fullscreen enable
 	bool fullscreen;
-
 };
 
 struct SDL_Window;
@@ -50,6 +51,9 @@ public:
 	//check if the window has been set to close
 	bool IsPendingClose() { return m_shouldClose; }
 
+	// render the graphics engine
+	void Render();
+
 private:
 	//a ref to the window in sdl
 	SDL_Window* m_sdlWindow;
@@ -59,4 +63,7 @@ private:
 
 	//determine if the window should close
 	bool m_shouldClose;
+
+	// store the graphics engine
+	std::unique_ptr<GGraphicsEngine>m_graphicsEngine;
 };

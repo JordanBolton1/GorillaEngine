@@ -1,4 +1,6 @@
 #include "GWindow.h"
+#include "Graphics/GGraphicsEngine.h"
+#include "Debug/GDebug.h"
 
 //external libs
 #include<SDL/SDL.h>
@@ -22,7 +24,7 @@ GWindow::~GWindow()
 
 bool GWindow::CreateWindow(const GSWindowParams& params)
 {
-	//enabling op[engl in our sdl window
+	//enabling opengl in our sdl window
 	unsigned int windowFlags = SDL_WINDOW_OPENGL;
 
 	//assigning the parameters to the member for the window
@@ -54,7 +56,23 @@ bool GWindow::CreateWindow(const GSWindowParams& params)
 		return false;
 	}
 
+	//create the graphics engine object
+	m_graphicsEngine = std::make_unique<GGraphicsEngine>();
 
+	//initialise the graphics engine and test if it fails
+	if (!m_graphicsEngine->InitEngine(m_sdlWindow, m_params.vsync)) {
+		GDebug::Log("window failed to initialise graphics engine", LT_ERROR);
+		m_graphicsEngine = nullptr;
+		return false;
+	}
 
 	return true;
+}
+
+void GWindow::Render()
+{
+	//rener the graphics engine if one exists
+	if (m_graphicsEngine) {
+		m_graphicsEngine->Render(m_sdlWindow);
+	}
 }
