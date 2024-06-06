@@ -28,7 +28,7 @@ bool GGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 
 		GDebug::Log("sdl failed to create gl context: " + std::string(SDL_GetError()), LT_ERROR);
 		GDebug::Log("graphics engine fail to initialise: ", LT_ERROR);
-			return false;
+		return false;
 	}
 
 	//make the current  context ative for the sdl window
@@ -52,30 +52,50 @@ bool GGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 		}
 	}
 
+	//initialise glew
+	GLenum glewResults = glewInit();
+
+	//test if glew failed
+	if (glewResults != GLEW_OK) {
+		std::string errorMsg = reinterpret_cast<const char*>(glewGetErrorString(glewResults));
+		GDebug::Log("Graphics engine failed to initialise GLEW:" + errorMsg);
+		return false;
+	}
+
 	//log the success of the graphics engine init
 	GDebug::Log("Successfully initialised graphics engine ", LT_SUCCESS);
 
 	//create debug mesh
 	m_mesh = std::make_unique<GMesh>();
 
-	vertexData.resize(3);
+	vertexData.resize(4);
 	//vertex 1
-	vertexData[0].m_pos[0] = 0.0f;
+	vertexData[0].m_pos[0] = -0.5f;
 	vertexData[0].m_pos[1] = 0.5f;
-	vertexData[0].m_pos[2] = 0.0f;
+	
 	//vertex 2
 	vertexData[1].m_pos[0] = -0.5f;
 	vertexData[1].m_pos[1] = -0.5f;
-	vertexData[1].m_pos[2] = 0.0f;
+	
 	//vertex 3
 	vertexData[2].m_pos[0] = 0.5f;
-	vertexData[2].m_pos[1] = -0.5f;
-	vertexData[2].m_pos[2] = 0.0f;
+	vertexData[2].m_pos[1] = 0.5f;
 
-	indexData.resize(3);
-	indexData[0] = 0;// vertex 1
-	indexData[1] = 1;// vertex 2
-	indexData[2] = 2;// vertex 3
+	//vertex 4
+	vertexData[3].m_pos[0] = 0.5f;
+	vertexData[3].m_pos[1] = -0.5f;
+	
+
+	indexData.resize(6);
+	// First triangle (vertices 0, 1, 2)
+	indexData[0] = 0; // Vertex 1
+	indexData[1] = 1; // Vertex 2
+	indexData[2] = 2; // Vertex 3
+
+	// Second triangle (vertices 2, 1, 3)
+	indexData[3] = 2; // Vertex 3
+	indexData[4] = 1; // Vertex 2
+	indexData[5] = 3; // Vertex 4
 
 	//create the mesh and tst if it failed
 	if (!m_mesh->CreateMesh(vertexData, indexData)) {
@@ -87,6 +107,9 @@ bool GGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 
 void GGraphicsEngine::Render(SDL_Window* sdlWindow)
 {
+	//there is a wireframe shader by deafault, this activtes it
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	//set a background colour
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 

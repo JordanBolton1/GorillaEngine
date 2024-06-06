@@ -81,8 +81,25 @@ bool GMesh::CreateMesh(const std::vector<GSVertexData> vertices, const std::vect
 		m_indices.data(),//memory location of the data
 		GL_STATIC_DRAW);//this data will not modified frequently
 
+	
+
+	//pass out the vertex data in separate formats
+	glEnableVertexAttribArray(0);
+
+	//set the positions of thaty data to be 0 index of the atributes array
+	glVertexAttribPointer(
+		0,//location to store the data in the attribute array
+		3,//how many numbers to pass into the attribute arrray index
+		GL_FLOAT,//the type of data to store
+		GL_FALSE,//should we normalise the  values, gennerally no
+		sizeof(GSVertexData),//how big is eaach data array in a vertexData
+		nullptr//how many numbers to skip
+	);
+
 	//common practice to claear the vao from the gpu
 	glBindVertexArray(0);
+
+	return true;
 }
 
 void GMesh::Render()
