@@ -108,7 +108,7 @@ bool GGraphicsEngine::InitEngine(SDL_Window* sdlWindow, const bool& vsync)
 void GGraphicsEngine::Render(SDL_Window* sdlWindow)
 {
 	//there is a wireframe shader by deafault, this activtes it
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	//set a background colour
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
