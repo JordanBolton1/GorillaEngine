@@ -102,13 +102,16 @@
   <ItemGroup>
     <ClCompile Include="Source\Private\Graphics\GGraphicsEngine.cpp" />
     <ClCompile Include="Source\Private\Graphics\GMesh.cpp" />
+    <ClCompile Include="Source\Private\Graphics\GShaderProgram.cpp" />
     <ClCompile Include="Source\Private\GWindow.cpp" />
     <ClCompile Include="Source\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\Debug\GDebug.h" />
     <ClInclude Include="Source\Public\Graphics\GMesh.h" />
+    <ClInclude Include="Source\Public\Graphics\GShaderProgram.h" />
     <ClInclude Include="Source\Public\GWindow.h" />
+    <ClInclude Include="Source\Public\Math\GSTransform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
