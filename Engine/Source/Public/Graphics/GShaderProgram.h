@@ -46,4 +46,4 @@ private:
 
 	//store the id for the program
 	uint32_t m_programID;
-};
+}; 

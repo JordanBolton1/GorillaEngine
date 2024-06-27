@@ -5,6 +5,9 @@
 #include <vector>
 #include <cstdint>
 
+class GShaderProgram;
+struct GSTransform;
+
 struct GSVertexData {
 	float m_pos[3] = { 0.0f, 0.0f, 0.0f };
 	float m_colour[3] = { 1.0f,1.0f,1.0f };
@@ -21,7 +24,7 @@ public:
 	bool CreateMesh(const std::vector<GSVertexData> vertices, const std::vector<uint32_t>& indices);
 
 	//draw the mesh to the renderer
-	void Render();
+	void Render(const std::shared_ptr<GShaderProgram>& shader, const GSTransform& transform);
 
 private:
 	//store verticies

@@ -1,5 +1,6 @@
 #include "Graphics/GMesh.h"
 #include "Debug/GDebug.h"
+#include "Graphics/GShaderProgram.h"
 
 // external libs
 #include <GLEW/glew.h>
@@ -116,8 +117,13 @@ bool GMesh::CreateMesh(const std::vector<GSVertexData> vertices, const std::vect
 	return true;
 }
 
-void GMesh::Render()
+void GMesh::Render(const std::shared_ptr<GShaderProgram>& shader, const GSTransform& transform)
 {
+	shader->Activate();
+
+	//update transform of the mesh based on the model transform
+	shader->SetModelTransform(transform);
+
 	//biding this mesh as the active vao 
 	glBindVertexArray(m_vao);
 
