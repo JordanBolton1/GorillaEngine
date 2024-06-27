@@ -9,8 +9,19 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_opengl.h>
 
- std::vector<GSVertexData> vertexData;
- std::vector<uint32_t> indexData;
+const std::vector<GSVertexData> vertexData = {
+		//x     //y   //z        //r   //g   //b  
+	{ { -0.5f,  0.5f, 0.0f  }, { 1.0f,0.0f,0.0f }},// vertex data 1 - top left - 0
+	{ {  0.5f,  0.5f, 0.0f  }, { 0.0f,1.0f,0.0f }},// vertex data 2 - top right - 1
+	{ { -0.5f, -0.5f, 0.0f  }, { 0.0f,0.0f,1.0f }},// vertex data 3 - bottom left - 2
+	{ {  0.5f, -0.5f, 0.0f  }, { 1.0f,1.0f,1.0f }} // vertex data 4 - bottom right - 3
+};
+
+const std::vector<uint32_t> indexData = {
+	 0, 1, 2, //triangle 1
+	 1, 2, 3  //triangle 2
+ };
+
  //test mesh for debug
  std::unique_ptr<GMesh> m_mesh;
 
@@ -67,9 +78,7 @@
 	 m_shader = std::make_shared<GShaderProgram>();
 
 	 //attempt to init shader and test if it failed
-	 if (!m_shader->InitShader(
-		 "Shaders/SimpleShader/SimpleShader.vertex",
-		 "Shaders/SimpleShader/SimpleShader.frag")) {
+	 if (!m_shader->InitShader("Shaders/SimpleShader/SimpleShader.vertex", "Shaders/SimpleShader/SimpleShader.frag")) {
 
 		 GDebug::Log("Graphics engine failed to initialise due to shader failure");
 		 return false;
@@ -80,51 +89,6 @@
 
 	//create debug mesh
 	m_mesh = std::make_unique<GMesh>();
-
-	vertexData.resize(4);
-	//vertex 1
-	vertexData[0].m_pos[0] = -0.5f;
-	vertexData[0].m_pos[1] = 0.5f;
-	//colour for v1
-	vertexData[0].m_colour[0] = 1.0f;//r
-	vertexData[0].m_colour[1] = 0.0f;//g
-	vertexData[0].m_colour[2] = 0.0f;//b
-	
-	//vertex 2
-	vertexData[1].m_pos[0] = -0.5f;
-	vertexData[1].m_pos[1] = -0.5f;
-	//colour for v2
-	vertexData[1].m_colour[0] = 0.0f;
-	vertexData[1].m_colour[1] = 1.0f;
-	vertexData[1].m_colour[2] = 0.0f;
-	
-	//vertex 3
-	vertexData[2].m_pos[0] = 0.5f;
-	vertexData[2].m_pos[1] = 0.5f;
-	//colour for v3
-	vertexData[2].m_colour[0] = 0.0f;
-	vertexData[2].m_colour[1] = 0.0f;
-	vertexData[2].m_colour[2] = 1.0f;
-
-	//vertex 4
-	vertexData[3].m_pos[0] = 0.5f;
-	vertexData[3].m_pos[1] = -0.5f;
-	//colour for v4
-	vertexData[3].m_colour[0] = 1.0f;
-	vertexData[3].m_colour[1] = 0.0f;
-	vertexData[3].m_colour[2] = 1.0f;
-	
-
-	indexData.resize(6);
-	// First triangle (vertices 0, 1, 2)
-	indexData[0] = 0; // Vertex 1
-	indexData[1] = 1; // Vertex 2
-	indexData[2] = 2; // Vertex 3
-
-	// Second triangle (vertices 2, 1, 3)
-	indexData[3] = 2; // Vertex 3
-	indexData[4] = 1; // Vertex 2
-	indexData[5] = 3; // Vertex 4
 
 	//create the mesh and tst if it failed
 	if (!m_mesh->CreateMesh(vertexData, indexData)) {
@@ -146,39 +110,8 @@ void GGraphicsEngine::Render(SDL_Window* sdlWindow)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	static GSTransform transform;
-	static float speedX = 0.005f;  // Speed for x-axis movement
-	static float speedY = 0.005f;  // Speed for y-axis movement
-
-	transform.position.x += speedX;
-	transform.position.y += speedY;
-
-	// Check and handle boundary conditions for x-axis
-	if (transform.position.x > 0.70f) {
-		speedX = 0.0f;  // Stop x-axis movement
-		speedY = -0.005f;  // Move downward (rotate counterclockwise)
-		transform.position.x = 0.70f;  // Limit position to boundary
-	}
-	else if (transform.position.x < -0.70f) {
-		speedX = 0.0f;  // Stop x-axis movement
-		speedY = 0.005f;  // Move upward (rotate counterclockwise)
-		transform.position.x = -0.70f;  // Limit position to boundary
-	}
-
-	// Check and handle boundary conditions for y-axis
-	if (transform.position.y > 0.70f) {
-		speedY = 0.0f;  
-		speedX = 0.005f;  
-		transform.position.y = 0.70f;  
-	}
-	else if (transform.position.y < -0.70f) {
-		speedY = 0.0f; 
-		speedX = -0.005f;  
-		transform.position.y = -0.70f;  
-	}
-
-
-	transform.rotation.z += 0.5f;
-	transform.scale = glm::vec3(0.5f);
+	//transform.rotation.z += 0.5f;
+	
 
 	//rendered custom graphics
 	m_mesh->Render(m_shader, transform);
