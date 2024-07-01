@@ -100,16 +100,22 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ExternalLibs\Includes\STB_IMAGE\stb_image.cpp" />
     <ClCompile Include="Source\Private\Graphics\GGraphicsEngine.cpp" />
     <ClCompile Include="Source\Private\Graphics\GMesh.cpp" />
     <ClCompile Include="Source\Private\Graphics\GShaderProgram.cpp" />
     <ClCompile Include="Source\Private\GWindow.cpp" />
+    <ClCompile Include="Source\Private\Graphics\GTexture.cpp" />
     <ClCompile Include="Source\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ExternalLibs\Includes\STB_IMAGE\stb_image.h" />
     <ClInclude Include="Source\Public\Debug\GDebug.h" />
+    <ClInclude Include="Source\Public\EngineTypes.h" />
+    <ClInclude Include="Source\Public\Graphics\GGraphicsEngine.h" />
     <ClInclude Include="Source\Public\Graphics\GMesh.h" />
     <ClInclude Include="Source\Public\Graphics\GShaderProgram.h" />
+    <ClInclude Include="Source\Public\Graphics\GTexture.h" />
     <ClInclude Include="Source\Public\GWindow.h" />
     <ClInclude Include="Source\Public\Math\GSTransform.h" />
   </ItemGroup>

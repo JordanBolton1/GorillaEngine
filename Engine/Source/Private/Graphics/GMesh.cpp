@@ -87,7 +87,7 @@ bool GMesh::CreateMesh(const std::vector<GSVertexData> vertices, const std::vect
 	//pass out the vertex data in separate formats
 	glEnableVertexAttribArray(0);
 
-	//set the positions of thaty data to be 0 index of the atributes array
+	//set the positions of that data to be 0 index of the atributes array
 	glVertexAttribPointer(
 		0,//location to store the data in the attribute array
 		3,//how many numbers to pass into the attribute arrray index
@@ -100,7 +100,7 @@ bool GMesh::CreateMesh(const std::vector<GSVertexData> vertices, const std::vect
 	//pass out the vertex data in separate formats
 	glEnableVertexAttribArray(1);
 
-	//set the positions of thaty data to be 0 index of the atributes array
+	//set the colour of that data to be 0 index of the atributes array
 	glVertexAttribPointer(
 		1,//location to store the data in the attribute array
 		3,//how many numbers to pass into the attribute arrray index
@@ -110,6 +110,18 @@ bool GMesh::CreateMesh(const std::vector<GSVertexData> vertices, const std::vect
 		(void*)(sizeof(float) * 3) //how many numbers to skip in bytes
 	);
 
+	//pass out the vertex data in separate formats
+	glEnableVertexAttribArray(2);
+
+	//set the texture coordinates of that data to be 0 index of the atributes array
+	glVertexAttribPointer(
+		2,//location to store the data in the attribute array
+		2,//how many numbers to pass into the attribute arrray index
+		GL_FLOAT,//the type of data to store
+		GL_FALSE,//should we normalise the  values, gennerally no
+		sizeof(GSVertexData),//how big is eaach data array in a vertexData
+		(void*)(sizeof(float) * 6) //how many numbers to skip in bytes
+	);
 
 	//common practice to claear the vao from the gpu
 	glBindVertexArray(0);
@@ -120,6 +132,12 @@ bool GMesh::CreateMesh(const std::vector<GSVertexData> vertices, const std::vect
 void GMesh::Render(const std::shared_ptr<GShaderProgram>& shader, const GSTransform& transform)
 {
 	shader->Activate();
+
+	//does a texture exsist
+	if (m_texture) {
+		//reun texture
+		shader->RunTexture(m_texture, 0);
+	}
 
 	//update transform of the mesh based on the model transform
 	shader->SetModelTransform(transform);

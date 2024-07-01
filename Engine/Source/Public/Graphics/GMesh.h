@@ -1,12 +1,9 @@
 #pragma once
-
-//system libs
-#include <iostream>
-#include <vector>
-#include <cstdint>
+#include"EngineTypes.h"
 
 class GShaderProgram;
 struct GSTransform;
+class GTexture;
 
 struct GSVertexData {
 	float m_pos[3] = { 0.0f, 0.0f, 0.0f };
@@ -26,6 +23,9 @@ public:
 	//draw the mesh to the renderer
 	void Render(const std::shared_ptr<GShaderProgram>& shader, const GSTransform& transform);
 
+	//set the texture in the mesh
+	void SetTexture(const TShared<GTexture>& texture) { m_texture = texture; }
+
 private:
 	//store verticies
 	std::vector<GSVertexData> m_vertices;
@@ -41,4 +41,8 @@ private:
 
 	//store the id for the element array object
 	uint32_t m_eao;
+
+	//texture for the mesh
+	TShared<GTexture> m_texture;
+
 };

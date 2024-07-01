@@ -1,6 +1,7 @@
 #include "Graphics/GShaderProgram.h"
 #include "Debug/GDebug.h"
 #include "Math/GSTransform.h"
+#include "Graphics/GTexture.h"
 
 //external libs
 #include <GLEW/glew.h>
@@ -22,14 +23,14 @@ GShaderProgram::~GShaderProgram()
 	GDebug::Log("Shader Program " + std::to_string(m_programID) + "destroyed");
 }
 
-bool GShaderProgram::InitShader(const std::string& vShaderPath, const std::string& fShaderPath)
+bool GShaderProgram::InitShader(const std::string& vShaderPath, const GString& fShaderPath)
 {
 	//create the shader program in open gl
 	m_programID = glCreateProgram();
 
 	//test if the create program failed
 	if (m_programID == 0) {
-		const std::string errorMsg = GGET_GLEW_ERROR;
+		const GString errorMsg = GGET_GLEW_ERROR;
 		GDebug::Log("shader failed to initialise, couldnt create program: " + errorMsg);
 
 		return false;
@@ -74,10 +75,33 @@ void GShaderProgram::SetModelTransform(const GSTransform& transform)
 
 }
 
-bool GShaderProgram::ImportShaderByType(const std::string& filePath, GEShaderType shaderType)
+void GShaderProgram::RunTexture(const TShared<GTexture>& texture, const GUi32& slot)
+{
+	//bind the texture
+	texture->BindTexture(slot);
+
+	//the id for the variable in the shader
+	int varID = 0;
+
+	//get the id depending on the slot
+	switch (slot)
+	{
+	case 0:
+		varID = glGetUniformLocation(m_programID, "colourMap");
+		break;
+	default:
+		break;
+	}
+
+	//update the shader
+	glUniform1i(varID, slot);
+
+}
+
+bool GShaderProgram::ImportShaderByType(const GString& filePath, GEShaderType shaderType)
 {
 	//convert the shader to a string
-	const std::string shaderStr = ConvertFileToString(filePath);
+	const GString shaderStr = ConvertFileToString(filePath);
 
 	//make sure there is a string path
 	if (shaderStr.empty()) {
@@ -102,7 +126,7 @@ bool GShaderProgram::ImportShaderByType(const std::string& filePath, GEShaderTyp
 	//make sure there is a string path
 	if (m_shaderIDs[shaderType] ==0) {
 		//error that string failed to import
-		const std::string errorMsg = GGET_GLEW_ERROR;
+		const GString errorMsg = GGET_GLEW_ERROR;
 		GDebug::Log("shader program could not assign shader id: " + errorMsg, LT_ERROR);
 		return false;
 	}
@@ -122,7 +146,7 @@ bool GShaderProgram::ImportShaderByType(const std::string& filePath, GEShaderTyp
 		//fill the log with info from gl about what happened
 		glGetShaderInfoLog(m_shaderIDs[shaderType], 512, nullptr, infoLog);
 		//log it
-		GDebug::Log("shader compilation error: " + std::string(infoLog),LT_ERROR);
+		GDebug::Log("shader compilation error: " + GString(infoLog),LT_ERROR);
 		return false;
 	}
 
@@ -132,7 +156,7 @@ bool GShaderProgram::ImportShaderByType(const std::string& filePath, GEShaderTyp
 	return true;
 }
 
-std::string GShaderProgram::ConvertFileToString(const std::string& filePath)
+GString GShaderProgram::ConvertFileToString(const GString& filePath)
 {
 	//convert the file path into an ifstream
 	std::ifstream shaderSource(filePath);
@@ -171,7 +195,7 @@ bool GShaderProgram::LinkToGPU()
 		//fill the log with info from gl about what happened
 		glGetShaderInfoLog(m_programID, 512, nullptr, infoLog);
 		//log it
-		GDebug::Log("shader link error: " + std::string(infoLog), LT_ERROR);
+		GDebug::Log("shader link error: " + GString(infoLog), LT_ERROR);
 		return false;
 	}
 

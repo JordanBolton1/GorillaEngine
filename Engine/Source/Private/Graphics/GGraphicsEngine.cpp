@@ -3,6 +3,7 @@
 #include "Graphics/GMesh.h"
 #include "Graphics/GShaderProgram.h"
 #include "Math/GSTransform.h"
+#include "Graphics/GTexture.h"
 
 //external libs
 #include <GLEW/glew.h>
@@ -10,11 +11,11 @@
 #include <SDL/SDL_opengl.h>
 
 const std::vector<GSVertexData> vertexData = {
-		//x     //y   //z        //r   //g   //b  
-	{ { -0.5f,  0.5f, 0.0f  }, { 1.0f,0.0f,0.0f }},// vertex data 1 - top left - 0
-	{ {  0.5f,  0.5f, 0.0f  }, { 0.0f,1.0f,0.0f }},// vertex data 2 - top right - 1
-	{ { -0.5f, -0.5f, 0.0f  }, { 0.0f,0.0f,1.0f }},// vertex data 3 - bottom left - 2
-	{ {  0.5f, -0.5f, 0.0f  }, { 1.0f,1.0f,1.0f }} // vertex data 4 - bottom right - 3
+		//x     //y   //z        //r   //g   //b      //tx  //ty
+	{ { -0.5f,  0.5f, 0.0f  }, { 1.0f, 1.0f, 1.0f }, {0.0f, 1.0f} },// vertex data 1 - top left - 0
+	{ {  0.5f,  0.5f, 0.0f  }, { 1.0f, 1.0f, 1.0f }, {1.0f, 1.0f} },// vertex data 2 - top right - 1
+	{ { -0.5f, -0.5f, 0.0f  }, { 1.0f, 1.0f, 1.0f }, {0.0f, 0.0f} },// vertex data 3 - bottom left - 2
+	{ {  0.5f, -0.5f, 0.0f  }, { 1.0f, 1.0f, 1.0f }, {1.0f, 0.0f} } // vertex data 4 - bottom right - 3
 };
 
 const std::vector<uint32_t> indexData = {
@@ -93,6 +94,14 @@ const std::vector<uint32_t> indexData = {
 	//create the mesh and tst if it failed
 	if (!m_mesh->CreateMesh(vertexData, indexData)) {
 		GDebug::Log("failed to create mesh");
+	}
+
+	//create the texture object
+	TShared<GTexture> defaultTexture = TMakeShared<GTexture>();
+
+	//add the texture to the mesh if it successfully created
+	if (defaultTexture->LoadTexture("Default Grid", "Textures/T_DefaultGrid.png")) {
+		m_mesh->SetTexture(defaultTexture);
 	}
 
 	return true;
